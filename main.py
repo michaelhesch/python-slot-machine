@@ -2,10 +2,49 @@
 Python slot machine demo project
 Created following tutorial https://www.youtube.com/watch?v=th4OBktqK1I&t=138s
 '''
+# Import modules
+import random
+
 # Define global constants
 MAX_LINES = 3
 MAX_BET = 100
 MIN_BET = 1
+
+ROWS = 3
+COLS = 3
+
+# Dict for number of symbols on each wheel, not balanced for realistic odds 
+symbol_count = {
+    "A": 2,
+    "B": 4,
+    "C": 6,
+    "D": 8
+}
+
+def get_slot_machine_spin(rows, cols, symbols):
+    all_symbols = []
+    # Loop through and add possilbe combinations of symbols to list
+    for symbol, symbol_count in symbols.items():
+        for _ in range(symbol_count):
+            all_symbols.append(symbol)
+            
+    # Create nested list of symbols for columns (not rows)
+    columns = []
+    # Loop to create set of symbols for the rows in each column
+    for _ in range(cols):
+        # List that will nest in columns var
+        column = []
+        # Copy of all symbols list, so we can remove selected values
+        # Create copy using the slice operator ":" to prevent overwriting original list
+        current_symbols = all_symbols[:]
+        for _ in range(rows):
+            value = random.choice(current_symbols)
+            # remove choice from copied list
+            current_symbols.remove(value)
+            # add value to column list
+            column.append(value)
+        # add column list to columns list outside loop
+        columns.append(column)
 
 # Define deposit function to get amount from user
 def deposit():
@@ -38,7 +77,7 @@ def get_number_of_lines():
 # Define bet amount per line
 def get_bet():
     while True:
-        amount = input("What would you like to bet? $")
+        amount = input("What would you like to bet on each line? $")
         if amount.isdigit():
             amount = int(amount)
             if MIN_BET <= amount <= MAX_BET:
@@ -54,7 +93,17 @@ def main():
     # Calls balance function to get balance
     balance = deposit()
     lines = get_number_of_lines()
+    # Call bet function in loop to check bet is within balance
+    while True:
+        bet = get_bet()
+        total_bet = bet * lines
+        
+        if total_bet > balance:
+            print(f"You do not have enough to bet that amount, your current balance is: ${balance}")
+        else:
+            break
     
+    print(f"You are betting ${bet} on {lines} lines. Total bet is equal to ${total_bet}")
 
 
 
