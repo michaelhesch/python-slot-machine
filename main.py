@@ -21,6 +21,7 @@ symbol_count = {
     "D": 8
 }
 
+# Define function to generate slot machine spins
 def get_slot_machine_spin(rows, cols, symbols):
     all_symbols = []
     # Loop through and add possilbe combinations of symbols to list
@@ -45,6 +46,21 @@ def get_slot_machine_spin(rows, cols, symbols):
             column.append(value)
         # add column list to columns list outside loop
         columns.append(column)
+    
+    return columns
+
+# Define function to visualize the columns
+def print_slot_machine(columns):
+    # Need to transpose data in columns matrix to visualize
+    # Loop through columns list and print each row
+    for row in range(len(columns[0])):
+        for i, column in enumerate(columns):
+            if i != len(columns) - 1:
+                print(column[row], end=" | ")
+            else:
+                print(column[row], end="")
+        # Print new line after each row        
+        print()
 
 # Define deposit function to get amount from user
 def deposit():
@@ -105,7 +121,8 @@ def main():
     
     print(f"You are betting ${bet} on {lines} lines. Total bet is equal to ${total_bet}")
 
-
+    slots = get_slot_machine_spin(ROWS, COLS, symbol_count)
+    print_slot_machine(slots)
 
 # call main function, allows playing repeatedly
 main()
